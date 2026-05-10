@@ -5,6 +5,10 @@ import json
 
 from supabase import Client
 
+import os
+import uuid
+import json
+
 from app.config import get_settings
 from app.exceptions import CourseServiceError
 from app.models import Course, CourseMaterial, CourseMaterialCreate, CourseCreate
