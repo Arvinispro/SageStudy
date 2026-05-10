@@ -11,3 +11,4 @@ pytest
 httpx
 python-multipart
 pypdf
+gunicorn
