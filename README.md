@@ -1,48 +1,70 @@
-# AI-Case_Comp Supabase Backend
+# SageStudy
 
-Production-ready FastAPI backend with Supabase auth and profile management.
+SageStudy is a full-stack study companion with Supabase authentication, learner profiles, practice sessions, and study tools. The app is deployed and available here: https://sagestudy.onrender.com/frontend/menu/menu.html
 
-## Architecture
+## Demo
 
-- FastAPI app entrypoint: app/main.py
-- Auth routes: app/routes/auth.py
-- Pydantic v2 models: app/models.py
-- Supabase client helpers: app/services/supabase_client.py
-- Auth service/business logic: app/services/auth_service.py
-- Environment config: app/config.py
-- SQL migration from schema: migrations/001_init_schema.sql
-- Tests: tests/test_auth.py
+Check out the demo video here!
+https://www.youtube.com/watch?v=vejA4ijQrdM
 
-## Schema notes from tables.sql
+## Highlights
 
-Used exactly as provided in migration. Notable issues found (proposed fixes, not applied automatically):
+- Supabase-backed sign up, sign in, session lookup, and log out flows
+- Profile and learning preference management
+- Practice and study mode UI pages for focused learning workflows
+- FastAPI backend with modular services and routers
+- Automated tests covering the auth flow and common failure cases
 
-1. past_problems.lllm_conversation appears to have a typo (3x 'l').
-	 - Proposed fix: rename to llm_conversation.
-2. All id columns are uuid NOT NULL without defaults.
-	 - Proposed fix: add DEFAULT gen_random_uuid() for safer inserts.
-3. users.username is not unique.
-	 - Proposed fix: add UNIQUE constraint to prevent duplicates.
-4. Some nullable fields likely should be stricter (e.g., created_at NOT NULL).
-	 - Proposed fix: enforce NOT NULL where appropriate.
+## Live App
 
-## Setup
+Open the deployed experience here:
 
-1) Create and activate a virtual environment (Python 3.11+).
+- https://sagestudy.onrender.com
 
-2) Install dependencies:
+## Tech Stack
+
+- Backend: FastAPI, Python 3.11+
+- Authentication: Supabase Auth and JWT verification
+- Data: Supabase Postgres
+- Validation: Pydantic v2
+- Testing: pytest
+- Deployment: Render
+
+## Project Structure
+
+- `main.py` - application entrypoint
+- `app/config.py` - environment configuration
+- `app/models.py` - shared request and response schemas
+- `app/routers/` - HTTP route handlers
+- `app/services/` - auth, course, orchestration, and storage logic
+- `frontend/` - static UI pages for the study experience
+- `tests/` - auth test coverage
+- `tables.sql` - database schema source
+
+## Features
+
+- User authentication with Supabase
+- Profile persistence and account page support
+- Learning preference capture
+- Study and practice entry points for learners
+- Backend API designed for Render deployment
+
+## Local Setup
+
+1. Create and activate a Python virtual environment.
+2. Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-3) Create env file:
+3. Create your environment file:
 
 ```bash
 cp .env.example .env
 ```
 
-4) Fill required values in .env:
+4. Add your Supabase credentials:
 
 ```env
 SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
@@ -51,69 +73,52 @@ SUPABASE_SERVICE_ROLE_KEY=YOUR_SUPABASE_SERVICE_ROLE_KEY
 JWT_SECRET=YOUR_SUPABASE_JWT_SECRET
 ```
 
-## Database migration
+## Run Locally
 
-Run the SQL in Supabase SQL Editor:
-
-- migrations/001_init_schema.sql
-
-Or using Supabase CLI migrations flow if you use CLI locally.
-
-## Run server
+Start the API server:
 
 ```bash
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-Swagger docs:
+Open the API docs at:
 
 - http://127.0.0.1:8000/docs
 
-## Auth API endpoints
+## Database Migration
 
-Base path: /api/v1/auth
+Apply the schema in Supabase SQL Editor using `tables.sql`, or adapt it into your preferred migration workflow.
 
-1) Sign up
+## API Overview
+
+Base path: `/api/v1/auth`
+
+- `POST /sign_up` - create a new account
+- `POST /sign_in` - authenticate a user
+- `GET /current_user` - fetch the active user from the bearer token
+- `POST /log_out` - invalidate the current session
+
+Example sign up request:
 
 ```bash
 curl -X POST http://127.0.0.1:8000/api/v1/auth/sign_up \
-	-H "Content-Type: application/json" \
-	-d '{
-		"email": "alice@example.com",
-		"password": "Password123",
-		"username": "alice_01"
-	}'
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "alice@example.com",
+    "password": "Password123",
+    "username": "alice_01"
+  }'
 ```
 
-2) Sign in
+## Testing
 
-```bash
-curl -X POST http://127.0.0.1:8000/api/v1/auth/sign_in \
-	-H "Content-Type: application/json" \
-	-d '{
-		"email": "alice@example.com",
-		"password": "Password123"
-	}'
-```
-
-3) Get current user
-
-```bash
-curl http://127.0.0.1:8000/api/v1/auth/current_user \
-	-H "Authorization: Bearer <ACCESS_TOKEN>"
-```
-
-4) Log out
-
-```bash
-curl -X POST http://127.0.0.1:8000/api/v1/auth/log_out \
-	-H "Authorization: Bearer <ACCESS_TOKEN>"
-```
-
-## Run tests
+Run the test suite with:
 
 ```bash
 pytest -q
 ```
 
-The test suite includes success and common failure cases for all auth routes.
+## Notes
+
+- The current schema is taken directly from `tables.sql`.
+- The codebase is structured to support auth, profile, study, and practice features as the app grows.
