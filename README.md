@@ -2,6 +2,11 @@
 
 SageStudy is a full-stack study companion with Supabase authentication, learner profiles, practice sessions, and study tools. The app is deployed and available here: https://sagestudy.onrender.com/frontend/menu/menu.html
 
+## Demo
+
+Check out the demo video here!
+https://www.youtube.com/watch?v=vejA4ijQrdM
+
 ## Highlights
 
 - Supabase-backed sign up, sign in, session lookup, and log out flows
